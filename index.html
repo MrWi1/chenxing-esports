@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宸星电竞 - 玩法菜单</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- 粒子背景 -->
+    <canvas id="particles"></canvas>
+
+    <!-- 顶部主题 -->
+    <header class="header">
+        <div class="logo-container">
+            <div class="logo-icon">
+                <svg viewBox="0 0 100 100" class="logo-svg">
+                    <defs>
+                        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#00f5ff;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <polygon points="50,5 95,35 80,90 20,90 5,35" fill="none" stroke="url(#logoGrad)"
+                        stroke-width="3" />
+                    <polygon points="50,20 80,40 70,75 30,75 20,40" fill="url(#logoGrad)" opacity="0.3" />
+                    <text x="50" y="58" text-anchor="middle" fill="url(#logoGrad)" font-size="18"
+                        font-weight="bold">CX</text>
+                </svg>
+            </div>
+            <h1 class="title">
+                <span class="title-cn">宸星电竞</span>
+                <span class="title-en">CHENXING ESPORTS</span>
+            </h1>
+        </div>
+        <div class="header-line"></div>
+    </header>
+
+    <!-- 菜单分类栏 -->
+    <nav class="menu-nav" id="menuNav">
+        <div class="nav-container">
+            <button class="nav-btn active" data-category="all">
+                <span class="nav-icon">🎮</span>
+                <span class="nav-text">全部玩法</span>
+            </button>
+            <button class="nav-btn" data-category="delta-companion">
+                <span class="nav-icon">⚔️</span>
+                <span class="nav-text">三角洲陪玩</span>
+            </button>
+            <button class="nav-btn" data-category="delta-fun">
+                <span class="nav-icon">🎲</span>
+                <span class="nav-text">三角洲趣味单</span>
+            </button>
+            <button class="nav-btn" data-category="delta-event">
+                <span class="nav-icon">🎉</span>
+                <span class="nav-text">三角洲活动单</span>
+            </button>
+            <button class="nav-btn" data-category="valorant">
+                <span class="nav-icon">🔫</span>
+                <span class="nav-text">无畏契约陪玩</span>
+            </button>
+            <button class="nav-btn" data-category="notice">
+                <span class="nav-icon">📋</span>
+                <span class="nav-text">老板须知</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 搜索栏 -->
+    <div class="search-container">
+        <div class="search-box">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+            </svg>
+            <input type="text" id="searchInput" placeholder="搜索玩法名称..." autocomplete="off">
+            <button class="search-clear" id="searchClear" title="清除搜索">✕</button>
+        </div>
+        <div class="search-tags" id="searchTags"></div>
+    </div>
+
+    <!-- 菜单内容区域 -->
+    <main class="content" id="content">
+        <!-- 子分类标签 -->
+        <div class="sub-tabs" id="subTabs"></div>
+        <!-- 卡片网格 -->
+        <div class="cards-grid" id="cardsGrid"></div>
+        <!-- 空状态 -->
+        <div class="empty-state" id="emptyState" style="display:none;">
+            <div class="empty-icon">🔍</div>
+            <p>没有找到匹配的玩法</p>
+        </div>
+    </main>
+
+    <!-- 图片查看器模态框 -->
+    <div class="viewer-overlay" id="viewerOverlay">
+        <div class="viewer-toolbar">
+            <span class="viewer-title" id="viewerTitle"></span>
+            <div class="viewer-actions">
+                <button class="viewer-btn" id="viewerZoomIn" title="放大">🔍+</button>
+                <button class="viewer-btn" id="viewerZoomOut" title="缩小">🔍-</button>
+                <button class="viewer-btn" id="viewerReset" title="重置">↺</button>
+                <button class="viewer-btn viewer-close" id="viewerClose" title="关闭">✕</button>
+            </div>
+        </div>
+        <div class="viewer-content" id="viewerContent">
+            <img id="viewerImage" src="" alt="">
+        </div>
+        <div class="viewer-tip">滚轮缩放 · 拖拽移动</div>
+    </div>
+
+    <!-- 回到顶部 -->
+    <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
