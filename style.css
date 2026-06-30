@@ -4,8 +4,9 @@
     box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     -webkit-tap-highlight-color: transparent;
+    /* 全局页面仅允许单指上下左右滑动，禁用双指缩放 */
+    touch-action: pan-x pan-y;
 }
-
 body {
     background: #050510;
     color: #fff;
@@ -13,8 +14,10 @@ body {
     position: relative;
     padding-top: env(safe-area-inset-top, 0px);
     padding-bottom: env(safe-area-inset-bottom, 0px);
+    touch-action: manipulation;
+    /* 禁止微信下拉回弹 */
+    overscroll-behavior: none;
 }
-
 /* 粒子背景 */
 #particles {
     position: fixed;
@@ -23,8 +26,9 @@ body {
     width: 100%;
     height: 100%;
     z-index: -1;
+    /* 画布禁止双指手势 */
+    touch-action: manipulation;
 }
-
 /* 顶部标题 */
 .header {
     text-align: center;
@@ -38,7 +42,6 @@ body {
     position: relative;
     z-index: 10;
 }
-
 /* 导航栏 */
 .navbar {
     display: flex;
@@ -54,7 +57,6 @@ body {
     z-index: 100;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
-
 .navbar button {
     padding: 8px 16px;
     border: 1px solid rgba(0, 255, 255, 0.3);
@@ -66,13 +68,11 @@ body {
     font-size: 0.9rem;
     white-space: nowrap;
 }
-
 .navbar button:hover,
 .navbar button.active {
     background: rgba(0, 255, 255, 0.2);
     box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
 }
-
 /* 搜索栏 */
 .search-bar {
     padding: 15px 20px;
@@ -80,7 +80,6 @@ body {
     justify-content: center;
     background: rgba(10, 10, 30, 0.6);
 }
-
 .search-bar input {
     width: 100%;
     max-width: 500px;
@@ -94,12 +93,10 @@ body {
     transition: all 0.3s ease;
     -webkit-appearance: none;
 }
-
 .search-bar input:focus {
     border-color: #00ffff;
     box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
 }
-
 /* 菜单区域 */
 .menu-section {
     display: grid;
@@ -109,7 +106,6 @@ body {
     max-width: 1400px;
     margin: 0 auto;
 }
-
 /* 卡片样式 */
 .card {
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
@@ -122,22 +118,18 @@ body {
     -webkit-user-select: none;
     user-select: none;
 }
-
 .card:active {
     transform: scale(0.97);
 }
-
 .card:hover {
     transform: translateY(-8px);
     box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
 }
-
 .card-image {
     position: relative;
     height: 180px;
     overflow: hidden;
 }
-
 .card-image img {
     width: 100%;
     height: 100%;
@@ -145,11 +137,9 @@ body {
     transition: transform 0.3s ease;
     pointer-events: none;
 }
-
 .card:hover .card-image img {
     transform: scale(1.05);
 }
-
 .card-tags {
     position: absolute;
     bottom: 10px;
@@ -158,7 +148,6 @@ body {
     gap: 6px;
     flex-wrap: wrap;
 }
-
 .tag {
     display: inline-block;
     padding: 2px 8px;
@@ -168,23 +157,19 @@ body {
     color: #00ffff;
     border: 1px solid rgba(0, 255, 255, 0.3);
 }
-
 .card-content {
     padding: 15px;
 }
-
 .card-content h3 {
     font-size: 1.2rem;
     margin-bottom: 8px;
     color: #00ffff;
 }
-
 .card-content p {
     font-size: 0.9rem;
     color: #aaa;
     line-height: 1.4;
 }
-
 /* ============================================
    图片查看器（PC + 手机通用）
    ============================================ */
@@ -204,14 +189,12 @@ body {
     visibility: hidden;
     transition: opacity 0.3s ease;
 }
-
 .image-viewer.active {
     opacity: 1;
     visibility: visible;
 }
-
-/* 图片本体 —— 手机端核心 */
-.viewer-img {
+/* 仅弹窗内图片允许全部触摸手势，覆盖全局限制 */
+.image-viewer .viewer-img {
     max-width: 90%;
     max-height: 80vh;
     object-fit: contain;
@@ -220,13 +203,10 @@ body {
     user-select: none !important;
     -webkit-user-drag: none;
     will-change: transform;
-    /* 手机端用 JS 直接设 transform，不需要 CSS transition */
 }
-
 .viewer-img:active {
     cursor: grabbing;
 }
-
 /* 底部控制栏 */
 .viewer-controls {
     position: absolute;
@@ -237,7 +217,6 @@ body {
     flex-wrap: wrap;
     justify-content: center;
 }
-
 .viewer-btn {
     padding: 8px 16px;
     border: 1px solid rgba(0, 255, 255, 0.3);
@@ -249,29 +228,24 @@ body {
     font-size: 0.9rem;
     white-space: nowrap;
 }
-
 .viewer-btn:hover {
     background: rgba(0, 255, 255, 0.2);
     box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
 }
-
 .close-btn {
     position: absolute;
     top: 20px;
     right: 20px;
 }
-
 /* ============================================
    手机端适配 (≤768px)
    ============================================ */
 @media (max-width: 768px) {
-
     /* Header */
     .header {
         font-size: 1.6rem;
         padding: 14px 0;
     }
-
     /* 导航栏 → 横向滚动胶囊 */
     .navbar {
         flex-wrap: nowrap;
@@ -283,18 +257,15 @@ body {
         -ms-overflow-style: none;
         -webkit-overflow-scrolling: touch;
     }
-
     .navbar::-webkit-scrollbar {
         display: none;
     }
-
     .navbar button {
         flex: 0 0 auto;
         padding: 6px 14px;
         font-size: 0.85rem;
         border-radius: 999px;
     }
-
     /* 搜索栏吸顶 */
     .search-bar {
         padding: 10px 14px;
@@ -302,58 +273,47 @@ body {
         top: 45px;
         z-index: 99;
     }
-
     .search-bar input {
         padding: 10px 16px;
         font-size: 0.95rem;
     }
-
     /* 卡片单列 */
     .menu-section {
         grid-template-columns: 1fr;
         padding: 12px;
         gap: 14px;
     }
-
     .card {
         border-radius: 10px;
     }
-
     .card-image {
         height: 160px;
     }
-
     .card-content h3 {
         font-size: 1rem;
     }
-
     .card-content p {
         font-size: 0.85rem;
     }
-
     /* 图片查看器 → 全屏沉浸式 */
     .image-viewer {
         background: rgba(0, 0, 0, 0.97);
     }
-
     .viewer-img {
         max-width: 100%;
         max-height: 100vh;
     }
-
     /* 底部控制栏：手机端更大更靠下 */
     .viewer-controls {
         bottom: max(20px, env(safe-area-inset-bottom, 10px));
         gap: 8px;
         padding: 0 10px;
     }
-
     .viewer-btn {
         padding: 10px 16px;
         font-size: 0.9rem;
         min-width: 60px;
     }
-
     .close-btn {
         top: max(12px, env(safe-area-inset-top, 10px));
         right: 12px;
@@ -362,7 +322,6 @@ body {
         z-index: 1010;
     }
 }
-
 /* ============================================
    超小屏 (≤480px)
    ============================================ */
@@ -371,45 +330,36 @@ body {
         font-size: 1.3rem;
         padding: 10px 0;
     }
-
     .navbar button {
         padding: 5px 12px;
         font-size: 0.8rem;
     }
-
     .search-bar {
         padding: 8px 10px;
         top: 38px;
     }
-
     .menu-section {
         padding: 10px;
         gap: 12px;
     }
-
     .card-image {
         height: 140px;
     }
-
     .card-content h3 {
         font-size: 0.95rem;
     }
-
     .card-content p {
         font-size: 0.8rem;
     }
-
     .viewer-controls {
         bottom: max(14px, env(safe-area-inset-bottom, 8px));
         gap: 5px;
     }
-
     .viewer-btn {
         padding: 8px 12px;
         font-size: 0.8rem;
     }
 }
-
 /* ============================================
    横屏手机
    ============================================ */
@@ -418,31 +368,25 @@ body {
         font-size: 1.2rem;
         padding: 8px 0;
     }
-
     .navbar {
         padding: 6px 10px;
     }
-
     .search-bar {
         padding: 6px 10px;
         top: 32px;
     }
-
     .menu-section {
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
         padding: 10px;
     }
-
     .card-image {
         height: 120px;
     }
-
     .viewer-controls {
         bottom: 10px;
         flex-direction: row;
     }
-
     .viewer-img {
         max-height: 90vh;
     }
