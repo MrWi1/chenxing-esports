@@ -4,23 +4,20 @@ let offsetX = 0;
 let offsetY = 0;
 let currentImages = [];
 let currentIndex = 0;
-// 拖拽状态
 let isDragging = false;
 let dragStartX = 0;
 let dragStartY = 0;
-// 触摸缩放状态
 let lastTouchDistance = 0;
 let isPinching = false;
-// 滑动切换状态
 let swipeStartX = 0;
 let swipeStartY = 0;
 let isSwiping = false;
-// 双击检测
 let lastTapTime = 0;
-// ✅ 是否处于图片查看模式
 let viewerActive = false;
 
-// ===== 初始化 =====
+const viewer = document.getElementById('imageViewer');
+const img = document.getElementById('viewerImg');
+
 document.addEventListener('DOMContentLoaded', () => {
     renderNavbar();
     renderMenu('delta-exclusive');
@@ -28,26 +25,23 @@ document.addEventListener('DOMContentLoaded', () => {
     setupViewer();
     setupTouchGestures();
 
-    // 修复：仅弹窗关闭时拦截双指，弹窗打开不拦截
+    // 页面全局拦截双指缩放（仅弹窗关闭时生效）
     document.addEventListener('touchstart', function(e) {
         if (!viewerActive && e.touches.length >= 2) {
             e.preventDefault();
         }
     }, { passive: false });
 
-    // 修复：仅页面双击拦截，弹窗内不拦截双击
+    // 页面全局拦截双击放大
     let lastGlobalTap = 0;
     document.addEventListener('touchend', e => {
         if (viewerActive) return;
         const now = Date.now();
-        if (now - lastGlobalTap < 300) {
-            e.preventDefault();
-        }
+        if (now - lastGlobalTap < 300) e.preventDefault();
         lastGlobalTap = now;
     }, { passive: false });
 });
 
-// ===== 渲染导航栏 =====
 function renderNavbar() {
     const navbar = document.getElementById('navbar');
     navbar.innerHTML = '';
@@ -63,14 +57,10 @@ function renderNavbar() {
         };
         navbar.appendChild(btn);
     }
-    const firstActive = Object.keys(MENU_DATA).find(key => MENU_DATA[key].items.length > 0);
-    if (firstActive) {
-        const activeBtn = document.querySelector(`[data-category="${firstActive}"]`);
-        if (activeBtn) activeBtn.classList.add('active');
-    }
+    const firstActive = Object.keys(MENU_DATA).find(k => MENU_DATA[k].items.length > 0);
+    if (firstActive) document.querySelector(`[data-category="${firstActive}"]`)?.classList.add('active');
 }
 
-// ===== 渲染菜单 =====
 function renderMenu(category) {
     const section = document.getElementById('menuSection');
     section.innerHTML = '';
@@ -80,46 +70,37 @@ function renderMenu(category) {
         card.className = 'card';
         card.dataset.id = item.id;
         card.innerHTML = `
-      <div class="card-image">
-        <img src="${item.img}" alt="${item.name}" loading="lazy">
-        <div class="card-tags">
-          ${item.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+        <div class="card-image">
+            <img src="${item.img}" alt="${item.name}" loading="lazy">
+            <div class="card-tags">
+                ${item.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+            </div>
         </div>
-      </div>
-      <div class="card-content">
-        <h3>${item.name}</h3>
-        <p>${item.desc}</p>
-      </div>
-    `;
+        <div class="card-content">
+            <h3>${item.name}</h3>
+            <p>${item.desc}</p>
+        </div>`;
         card.onclick = () => openViewer(item.img, items, items.indexOf(item));
         section.appendChild(card);
     });
 }
 
-// ===== 搜索功能 =====
 function setupSearch() {
     const input = document.getElementById('searchInput');
-    input.oninput = (e) => {
-        const keyword = e.target.value.toLowerCase().trim();
+    input.oninput = e => {
+        const kw = e.target.value.toLowerCase().trim();
         document.querySelectorAll('.card').forEach(card => {
             const title = card.querySelector('h3').innerText.toLowerCase();
             const desc = card.querySelector('p').innerText.toLowerCase();
             const tags = Array.from(card.querySelectorAll('.tag')).map(t => t.innerText.toLowerCase()).join(' ');
-            const isMatch = !keyword || title.includes(keyword) || desc.includes(keyword) || tags.includes(keyword);
-            card.style.display = isMatch ? 'block' : 'none';
+            card.style.display = (!kw || title.includes(kw) || desc.includes(kw) || tags.includes(kw)) ? 'block' : 'none';
         });
     };
 }
 
-// ===== 图片查看器 =====
-const viewer = document.getElementById('imageViewer');
-const img = document.getElementById('viewerImg');
-
-/* 打开查看器 */
 function openViewer(imgPath, items, index) {
-    if (!img || !viewer) return;
     viewerActive = true;
-    currentImages = items.map(item => item.img);
+    currentImages = items.map(i => i.img);
     currentIndex = index || 0;
     img.src = imgPath;
     scale = 1;
@@ -131,7 +112,6 @@ function openViewer(imgPath, items, index) {
     document.body.style.overflow = 'hidden';
 }
 
-/* 更新按钮 */
 function updateViewerButtons() {
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
@@ -139,31 +119,25 @@ function updateViewerButtons() {
     if (nextBtn) nextBtn.style.visibility = currentIndex >= currentImages.length - 1 ? 'hidden' : 'visible';
 }
 
-/* 切换图片 */
 function changeImage(delta) {
-    const newIndex = currentIndex + delta;
-    if (newIndex < 0 || newIndex >= currentImages.length) return;
-    currentIndex = newIndex;
+    const newIdx = currentIndex + delta;
+    if (newIdx < 0 || newIdx >= currentImages.length) return;
+    currentIndex = newIdx;
     img.src = currentImages[currentIndex];
     scale = 1;
-    offsetX = 0;
-    offsetY = 0;
+    offsetX = offsetY = 0;
     applyTransform();
     updateViewerButtons();
 }
 
-/* 关闭 */
 function closeViewerHandler() {
     viewerActive = false;
     viewer.classList.remove('active');
     scale = 1;
-    offsetX = 0;
-    offsetY = 0;
+    offsetX = offsetY = 0;
     document.body.style.overflow = '';
 }
 document.getElementById('closeViewer').onclick = closeViewerHandler;
-
-/* 放大/缩小按钮 */
 document.getElementById('zoomIn').onclick = () => {
     scale = Math.min(scale * 1.3, 5);
     applyTransform();
@@ -176,21 +150,21 @@ document.getElementById('zoomOut').onclick = () => {
 document.getElementById('prevBtn').onclick = () => changeImage(-1);
 document.getElementById('nextBtn').onclick = () => changeImage(1);
 
-/* 应用变换 */
 function applyTransform() {
     img.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
 }
 
-/* 滚轮缩放 PC */
+// PC滚轮缩放
 viewer.addEventListener('wheel', e => {
+    if (!viewerActive) return;
     e.preventDefault();
     const delta = e.deltaY > 0 ? 0.9 : 1.1;
     scale = Math.max(0.5, Math.min(scale * delta, 5));
     applyTransform();
 }, { passive: false });
 
-/* 鼠标拖拽 PC */
-img.onmousedown = function (e) {
+// PC鼠标拖拽
+img.onmousedown = e => {
     if (e.button !== 0 || scale <= 1) return;
     isDragging = true;
     dragStartX = e.clientX - offsetX;
@@ -198,7 +172,7 @@ img.onmousedown = function (e) {
     img.style.cursor = 'grabbing';
     e.preventDefault();
 };
-img.onmousemove = function (e) {
+img.onmousemove = e => {
     if (!isDragging) return;
     offsetX = e.clientX - dragStartX;
     offsetY = e.clientY - dragStartY;
@@ -213,19 +187,14 @@ img.onmouseleave = () => {
     img.style.cursor = scale > 1 ? 'grab' : 'default';
 };
 
-// ===================================================================
-//  手机端触摸手势（仅viewerActive=true生效）
-// ===================================================================
+// ========== 核心修复：触摸监听绑定到图片img，不再绑外层viewer ==========
 function setupTouchGestures() {
     function getTouchDistance(touches) {
-        return Math.hypot(
-            touches[0].clientX - touches[1].clientX,
-            touches[0].clientY - touches[1].clientY
-        );
+        return Math.hypot(touches[0].clientX - touches[1].clientX, touches[0].clientY - touches[1].clientY);
     }
 
-    /* touchstart */
-    viewer.addEventListener('touchstart', function (e) {
+    // touchstart 绑定图片
+    img.addEventListener('touchstart', e => {
         if (!viewerActive) return;
         e.preventDefault();
         if (e.touches.length === 1) {
@@ -247,8 +216,8 @@ function setupTouchGestures() {
         }
     }, { passive: false });
 
-    /* touchmove */
-    viewer.addEventListener('touchmove', function (e) {
+    // touchmove 绑定图片
+    img.addEventListener('touchmove', e => {
         if (!viewerActive) return;
         e.preventDefault();
         if (e.touches.length === 1 && isDragging && scale > 1) {
@@ -263,15 +232,13 @@ function setupTouchGestures() {
         }
     }, { passive: false });
 
-    /* touchend */
-    viewer.addEventListener('touchend', function (e) {
+    // touchend 绑定图片
+    img.addEventListener('touchend', e => {
         if (!viewerActive) return;
         if (e.touches.length === 0) {
             if (isSwiping && scale <= 1) {
                 const diffX = e.changedTouches[0].clientX - swipeStartX;
-                if (Math.abs(diffX) > 50) {
-                    changeImage(diffX > 0 ? -1 : 1);
-                }
+                if (Math.abs(diffX) > 50) changeImage(diffX > 0 ? -1 : 1);
             }
             isDragging = false;
             isSwiping = false;
@@ -286,16 +253,15 @@ function setupTouchGestures() {
         }
     }, { passive: true });
 
-    /* 双击放大图片 */
-    img.addEventListener('touchend', function (e) {
+    // 双击放大
+    img.addEventListener('touchend', e => {
         if (!viewerActive) return;
         const now = Date.now();
         if (now - lastTapTime < 350) {
             e.preventDefault();
             if (scale > 1) {
                 scale = 1;
-                offsetX = 0;
-                offsetY = 0;
+                offsetX = offsetY = 0;
             } else {
                 scale = 2;
                 const t = e.changedTouches[0];
@@ -311,13 +277,12 @@ function setupTouchGestures() {
     }, { passive: false });
 }
 
-// ===== 粒子背景 =====
+// 粒子画布
 const canvas = document.getElementById('particles');
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 canvas.style.touchAction = 'manipulation';
-// 修复：仅弹窗关闭时拦截画布双指
 canvas.addEventListener('touchstart', e => {
     if (!viewerActive) e.preventDefault();
 }, { passive: false });
