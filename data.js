@@ -1,14 +1,9 @@
-/**
- * 宸星电竞 - 玩法菜单数据
- * 请根据实际图片路径修改 img 字段
- */
-
 const MENU_DATA = {
     // ===== 三角洲陪玩 =====
-    "delta-companion": {
+    "delta-escort": {
         name: "三角洲陪玩",
-        icon: "⚔️",
-        color: "badge-delta",
+        icon: "🎮",
+        color: "badge-escort",
         items: [
             {
                 id: "dc001",
@@ -19,20 +14,18 @@ const MENU_DATA = {
             }
         ]
     },
-
-    // ===== 三角洲独家趣味单 =====
+    // ===== 独家趣味单 =====
     "delta-exclusive": {
         name: "独家趣味单",
-        icon: "🌟",
-        color: "badge-fun",
+        icon: "⭐",
+        color: "badge-exclusive",
         items: [
-            { id: "de001", name: "黄金矿工", desc: "经典挖矿玩法，比比谁更肝", img: "images/kuanggong.jpg", tags: ["独家", "趣味"] },
-            { id: "de002", name: "独自升级", desc: "单人挑战极限，证明你的实力", img: "images/duzishengji.jpg", tags: ["独家", "挑战"] },
-            { id: "de003", name: "十二星座", desc: "星座主题趣味玩法，看看你的幸运星", img: "images/12xingzuo.jpg", tags: ["独家", "星座"] }
+            { id: "ex-001", name: "黄金矿工", desc: "经典挖矿玩法，比比谁更肝", img: "images/kuanggong.jpg", tags: ["独家", "趣味"] },
+            { id: "ex-002", name: "独自升级", desc: "单人挑战极限，证明你的实力", img: "images/duzishengji.jpg", tags: ["独家", "挑战"] },
+            { id: "ex-003", name: "十二星座", desc: "星座主题趣味玩法，看看你的幸运星", img: "images/12xingzuo.jpg", tags: ["独家", "星座"] }
         ]
     },
-
-    // ===== 三角洲趣味单 =====
+    // ===== 常规趣味单 =====
     "delta-fun": {
         name: "常规趣味单",
         icon: "🎲",
@@ -56,111 +49,53 @@ const MENU_DATA = {
             { id: "df016", name: "悬赏令", desc: "发布悬赏，全服通缉目标", img: "images/xaunshang.jpg", tags: ["趣味", "悬赏"] }
         ]
     },
-
+    // ===== 基础趣味单 =====
+    "basic-fun": {
+        name: "基础趣味单",
+        icon: "🔰",
+        color: "badge-basic",
+        items: [
+            { id: "bf-001", name: "趣味单1", desc: "基础趣味玩法1", img: "images/quweidan1.jpg", tags: ["基础", "趣味"] },
+            { id: "bf-002", name: "趣味单2", desc: "基础趣味玩法2", img: "images/quweidan2.jpg", tags: ["基础", "趣味"] },
+            { id: "bf-003", name: "趣味单3", desc: "基础趣味玩法3", img: "images/quweidan3.jpg", tags: ["基础", "趣味"] }
+        ]
+    },
     // ===== 三角洲活动单 =====
     "delta-event": {
-        name: "基础趣味单",
-        icon: "🎉",
+        name: "三角洲活动单",
+        icon: "🎁",
         color: "badge-event",
         items: [
-            { id: "ev001", name: "趣味单1", desc: "活动内容详情请咨询前台", img: "images/quweidan1.jpg", tags: ["活动"] },
-            { id: "ev002", name: "趣味单2", desc: "活动内容详情请咨询前台", img: "images/quweidan2.jpg", tags: ["活动"] },
-            { id: "ev003", name: "趣味单3", desc: "活动内容详情请咨询前台", img: "images/quweidan3.jpg", tags: ["活动"] }
+            { id: "ev-001", name: "盲盒单", desc: "神秘盲盒，开启未知惊喜", img: "images/manghe.jpg", tags: ["活动", "惊喜"] },
+            { id: "ev-002", name: "暑期单", desc: "暑期特别活动，超值优惠不容错过", img: "images/shuqidan.jpg", tags: ["活动", "暑期"] },
+            { id: "ev-003", name: "28R陪玩单", desc: "超值28元陪玩体验，性价比之王", img: "images/28R.jpg", tags: ["活动", "特价"] }
         ]
     },
-
-    // ===== 特惠单 =====
-    "delta-special": {
-        name: "活动单",
-        icon: "🔥",
-        color: "badge-event",
-        items: [
-            { id: "sp001", name: "盲盒单", desc: "神秘盲盒，开启未知惊喜", img: "images/manghe.jpg", tags: ["特惠", "盲盒"] },
-            { id: "sp002", name: "暑期单", desc: "暑期特别活动，超值优惠不容错过", img: "images/shuqidan.jpg", tags: ["特惠", "暑期"] },
-            { id: "sp003", name: "28R陪玩单", desc: "超值28元陪玩体验，性价比之王", img: "images/28R.jpg", tags: ["特惠", "陪玩"] }
-        ]
-    },
-
     // ===== 无畏契约陪玩 =====
-    "valorant": {
+    "valo-escort": {
         name: "无畏契约陪玩",
-        icon: "🔫",
-        color: "badge-valorant",
+        icon: "🎯",
+        color: "badge-valo",
         items: [
             { id: "va001", name: "无畏契约陪玩单", desc: "瓦罗兰特专业陪玩，枪枪爆头", img: "images/weweiqiyue.jpg", tags: ["陪玩", "FPS"] }
         ]
     },
-
     // ===== 老板须知 =====
-    "notice": {
+    "boss-notice": {
         name: "老板须知",
-        icon: "📋",
+        icon: "📜",
         color: "badge-notice",
         items: [
-            { id: "no001", name: "老板须知", desc: "请仔细阅读俱乐部规则与注意事项", img: "images/xuzhi.jpg", tags: ["须知", "规则"] }
+            { id: "bn-001", name: "老板须知", desc: "本俱乐部服务条款与注意事项", img: "images/xuzhi.jpg", tags: ["须知", "规则"] }
         ]
     },
     // ===== 客服微信 =====
-    "wechat": {
+    "customer-service": {
         name: "客服微信",
-        icon: "👩🏻‍💻",
-        color: "badge-notice",
+        icon: "💬",
+        color: "badge-service",
         items: [
-            { id: "wx01", name: "客服微信", desc: "客服微信：Cxdj0927", img: "images/wechat1.jpg", tags: ["客服", "微信"] }
+            { id: "cs-001", name: "客服微信", desc: "添加客服微信，随时联系我们", img: "images/wechat1.jpg", tags: ["客服", "联系"] }
         ]
     }
 };
-
-// 分类配置：定义主菜单的顺序和包含的子分类
-const CATEGORY_CONFIG = [
-    {
-        id: "all",
-        name: "全部玩法",
-        icon: "🎮",
-        subCategories: [
-            "delta-companion",
-            "delta-exclusive",
-            "delta-fun",
-            "delta-event",
-            "delta-special",
-            "valorant",
-            "notice"
-        ]
-    },
-    {
-        id: "delta-companion",
-        name: "三角洲陪玩",
-        icon: "⚔️",
-        subCategories: ["delta-companion"]
-    },
-    {
-        id: "delta-fun",
-        name: "三角洲趣味单",
-        icon: "🎲",
-        subCategories: ["delta-exclusive", "delta-fun", "delta-event", "delta-special"]
-    },
-    {
-        id: "delta-event",
-        name: "三角洲活动单",
-        icon: "🎉",
-        subCategories: ["delta-event", "delta-special"]
-    },
-    {
-        id: "valorant",
-        name: "无畏契约陪玩",
-        icon: "🔫",
-        subCategories: ["valorant"]
-    },
-    {
-        id: "notice",
-        name: "老板须知",
-        icon: "📋",
-        subCategories: ["notice"]
-    },
-    {
-        id: "wechat",
-        name: "客服微信",
-        icon: "📱",
-        subCategories: ["wechat"]  // 因为 wechat 是独立分类，没有子分类
-    }
-];
