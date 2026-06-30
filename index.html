@@ -2,7 +2,6 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <!-- 关键修改：放开maximum-scale，允许JS自定义手势识别 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0, user-scalable=yes">
     <title>宸星电竞价目表</title>
     <link rel="stylesheet" href="style.css">
@@ -11,7 +10,7 @@
     <!-- 粒子背景画布 -->
     <canvas id="particles"></canvas>
 
-    <div class="header">宸星电竞价目表</div>
+    <div class="header">宸星电竞</div>
 
     <!-- 导航栏 -->
     <div class="navbar" id="navbar"></div>
@@ -26,7 +25,6 @@
 
     <!-- 图片查看器弹窗 -->
     <div class="image-viewer" id="imageViewer">
-        <!-- 图片放在最上层，控制按钮pointer-events穿透 -->
         <img class="viewer-img" id="viewerImg" alt="大图预览">
         <button class="viewer-btn close-btn" id="closeViewer">✕</button>
         <div class="viewer-controls">
