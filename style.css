@@ -4,7 +4,6 @@
     box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     -webkit-tap-highlight-color: transparent;
-    /* 页面仅允许单指滑动，不拦截多点事件接收 */
     touch-action: pan-x pan-y;
 }
 body {
@@ -17,7 +16,6 @@ body {
     touch-action: manipulation;
     overscroll-behavior: none;
 }
-/* 粒子背景 */
 #particles {
     position: fixed;
     top: 0;
@@ -26,9 +24,7 @@ body {
     height: 100%;
     z-index: -1;
     touch-action: manipulation;
-    pointer-events: auto;
 }
-/* 顶部标题 */
 .header {
     text-align: center;
     padding: 20px 0;
@@ -41,7 +37,6 @@ body {
     position: relative;
     z-index: 10;
 }
-/* 导航栏 */
 .navbar {
     display: flex;
     justify-content: center;
@@ -72,7 +67,6 @@ body {
     background: rgba(0, 255, 255, 0.2);
     box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
 }
-/* 搜索栏 */
 .search-bar {
     padding: 15px 20px;
     display: flex;
@@ -96,7 +90,6 @@ body {
     border-color: #00ffff;
     box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
 }
-/* 菜单区域 */
 .menu-section {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -105,7 +98,6 @@ body {
     max-width: 1400px;
     margin: 0 auto;
 }
-/* 卡片样式 */
 .card {
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
     border: 1px solid rgba(0, 255, 255, 0.2);
@@ -169,9 +161,6 @@ body {
     color: #aaa;
     line-height: 1.4;
 }
-/* ============================================
-   图片查看器（PC + 手机通用）
-   ============================================ */
 .image-viewer {
     position: fixed;
     top: 0;
@@ -192,7 +181,6 @@ body {
     opacity: 1;
     visibility: visible;
 }
-/* 仅弹窗图片允许完整手势 */
 .image-viewer .viewer-img {
     max-width: 90%;
     max-height: 80vh;
@@ -207,11 +195,10 @@ body {
 .viewer-img:active {
     cursor: grabbing;
 }
-/* 控制按钮允许点击，但不拦截底层图片触摸 */
+/* 按钮仅自身可点击，不拦截底层图片触摸 */
 .viewer-controls, .close-btn {
     pointer-events: auto;
 }
-/* 底部控制栏 */
 .viewer-controls {
     position: absolute;
     bottom: 20px;
@@ -241,16 +228,11 @@ body {
     top: 20px;
     right: 20px;
 }
-/* ============================================
-   手机端适配 (≤768px)
-   ============================================ */
 @media (max-width: 768px) {
-    /* Header */
     .header {
         font-size: 1.6rem;
         padding: 14px 0;
     }
-    /* 导航栏 → 横向滚动胶囊 */
     .navbar {
         flex-wrap: nowrap;
         overflow-x: auto;
@@ -270,7 +252,6 @@ body {
         font-size: 0.85rem;
         border-radius: 999px;
     }
-    /* 搜索栏吸顶 */
     .search-bar {
         padding: 10px 14px;
         position: sticky;
@@ -281,7 +262,6 @@ body {
         padding: 10px 16px;
         font-size: 0.95rem;
     }
-    /* 卡片单列 */
     .menu-section {
         grid-template-columns: 1fr;
         padding: 12px;
@@ -299,7 +279,6 @@ body {
     .card-content p {
         font-size: 0.85rem;
     }
-    /* 图片查看器 → 全屏沉浸式 */
     .image-viewer {
         background: rgba(0, 0, 0, 0.97);
     }
@@ -307,7 +286,6 @@ body {
         max-width: 100%;
         max-height: 100vh;
     }
-    /* 底部控制栏：手机端更大更靠下 */
     .viewer-controls {
         bottom: max(20px, env(safe-area-inset-bottom, 10px));
         gap: 8px;
@@ -326,9 +304,6 @@ body {
         z-index: 1010;
     }
 }
-/* ============================================
-   超小屏 (≤480px)
-   ============================================ */
 @media (max-width: 480px) {
     .header {
         font-size: 1.3rem;
@@ -364,9 +339,6 @@ body {
         font-size: 0.8rem;
     }
 }
-/* ============================================
-   横屏手机
-   ============================================ */
 @media (max-width: 768px) and (orientation: landscape) {
     .header {
         font-size: 1.2rem;
