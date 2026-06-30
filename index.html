@@ -3,9 +3,17 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <title>宸星电竞</title>
     <link rel="stylesheet" href="style.css" />
+    <!-- 阻止 iOS Safari 默认双指缩放，让 JS 完全接管 -->
+    <script>
+        document.addEventListener('gesturestart', function (e) { e.preventDefault(); }, { passive: false });
+        document.addEventListener('gesturechange', function (e) { e.preventDefault(); }, { passive: false });
+        document.addEventListener('gestureend', function (e) { e.preventDefault(); }, { passive: false });
+    </script>
 </head>
 
 <body>
@@ -24,7 +32,7 @@
 
     <!-- 搜索栏 -->
     <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="搜索游戏玩法/单子..." />
+        <input type="text" id="searchInput" placeholder="搜索游戏玩法/单子..." autocomplete="off" />
     </div>
 
     <!-- 菜单区域 -->
