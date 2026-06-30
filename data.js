@@ -99,6 +99,15 @@ const MENU_DATA = {
         items: [
             { id: "no001", name: "老板须知", desc: "请仔细阅读俱乐部规则与注意事项", img: "images/xuzhi.jpg", tags: ["须知", "规则"] }
         ]
+    },
+    // ===== 客服微信 =====
+    "wechat": {
+        name: "客服微信",
+        icon: "👩🏻‍💻",
+        color: "badge-notice",
+        items: [
+            { id: "wx01", name: "客服微信", desc: "客服微信：Cxdj0927", img: "images/wechat1.jpg", tags: ["客服", "微信"] }
+        ]
     }
 };
 
@@ -147,5 +156,11 @@ const CATEGORY_CONFIG = [
         name: "老板须知",
         icon: "📋",
         subCategories: ["notice"]
+    },
+    {
+        id: "wechat",
+        name: "客服微信",
+        icon: "📱",
+        subCategories: ["wechat"]  // 因为 wechat 是独立分类，没有子分类
     }
 ];
