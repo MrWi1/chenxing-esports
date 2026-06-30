@@ -17,8 +17,9 @@ let swipeStartY = 0;
 let isSwiping = false;
 // 双击检测
 let lastTapTime = 0;
-// ✅ 新增：是否处于图片查看模式
+// ✅ 是否处于图片查看模式
 let viewerActive = false;
+
 // ===== 初始化 =====
 document.addEventListener('DOMContentLoaded', () => {
     renderNavbar();
@@ -27,14 +28,14 @@ document.addEventListener('DOMContentLoaded', () => {
     setupViewer();
     setupTouchGestures();
 
-    // 新增1：全局拦截双指触摸，页面未打开图片时禁止双指缩放
+    // 修复：仅弹窗关闭时拦截双指，弹窗打开不拦截
     document.addEventListener('touchstart', function(e) {
         if (!viewerActive && e.touches.length >= 2) {
             e.preventDefault();
         }
     }, { passive: false });
 
-    // 新增2：全局拦截页面双击放大，仅图片弹窗内允许双击
+    // 修复：仅页面双击拦截，弹窗内不拦截双击
     let lastGlobalTap = 0;
     document.addEventListener('touchend', e => {
         if (viewerActive) return;
@@ -45,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         lastGlobalTap = now;
     }, { passive: false });
 });
+
 // ===== 渲染导航栏 =====
 function renderNavbar() {
     const navbar = document.getElementById('navbar');
@@ -67,6 +69,7 @@ function renderNavbar() {
         if (activeBtn) activeBtn.classList.add('active');
     }
 }
+
 // ===== 渲染菜单 =====
 function renderMenu(category) {
     const section = document.getElementById('menuSection');
@@ -92,6 +95,7 @@ function renderMenu(category) {
         section.appendChild(card);
     });
 }
+
 // ===== 搜索功能 =====
 function setupSearch() {
     const input = document.getElementById('searchInput');
@@ -106,13 +110,15 @@ function setupSearch() {
         });
     };
 }
+
 // ===== 图片查看器 =====
 const viewer = document.getElementById('imageViewer');
 const img = document.getElementById('viewerImg');
+
 /* 打开查看器 */
 function openViewer(imgPath, items, index) {
     if (!img || !viewer) return;
-    viewerActive = true; // ✅ 启用触摸手势
+    viewerActive = true;
     currentImages = items.map(item => item.img);
     currentIndex = index || 0;
     img.src = imgPath;
@@ -124,6 +130,7 @@ function openViewer(imgPath, items, index) {
     updateViewerButtons();
     document.body.style.overflow = 'hidden';
 }
+
 /* 更新按钮 */
 function updateViewerButtons() {
     const prevBtn = document.getElementById('prevBtn');
@@ -131,6 +138,7 @@ function updateViewerButtons() {
     if (prevBtn) prevBtn.style.visibility = currentIndex <= 0 ? 'hidden' : 'visible';
     if (nextBtn) nextBtn.style.visibility = currentIndex >= currentImages.length - 1 ? 'hidden' : 'visible';
 }
+
 /* 切换图片 */
 function changeImage(delta) {
     const newIndex = currentIndex + delta;
@@ -143,9 +151,10 @@ function changeImage(delta) {
     applyTransform();
     updateViewerButtons();
 }
+
 /* 关闭 */
 function closeViewerHandler() {
-    viewerActive = false; // ✅ 禁用触摸手势
+    viewerActive = false;
     viewer.classList.remove('active');
     scale = 1;
     offsetX = 0;
@@ -153,7 +162,8 @@ function closeViewerHandler() {
     document.body.style.overflow = '';
 }
 document.getElementById('closeViewer').onclick = closeViewerHandler;
-/* 放大/缩小 */
+
+/* 放大/缩小按钮 */
 document.getElementById('zoomIn').onclick = () => {
     scale = Math.min(scale * 1.3, 5);
     applyTransform();
@@ -165,18 +175,21 @@ document.getElementById('zoomOut').onclick = () => {
 };
 document.getElementById('prevBtn').onclick = () => changeImage(-1);
 document.getElementById('nextBtn').onclick = () => changeImage(1);
+
 /* 应用变换 */
 function applyTransform() {
     img.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
 }
-/* 滚轮缩放 */
+
+/* 滚轮缩放 PC */
 viewer.addEventListener('wheel', e => {
     e.preventDefault();
     const delta = e.deltaY > 0 ? 0.9 : 1.1;
     scale = Math.max(0.5, Math.min(scale * delta, 5));
     applyTransform();
 }, { passive: false });
-/* 鼠标拖拽 */
+
+/* 鼠标拖拽 PC */
 img.onmousedown = function (e) {
     if (e.button !== 0 || scale <= 1) return;
     isDragging = true;
@@ -199,8 +212,9 @@ img.onmouseleave = () => {
     isDragging = false;
     img.style.cursor = scale > 1 ? 'grab' : 'default';
 };
+
 // ===================================================================
-//  手机端触摸手势（✅ 仅在 viewerActive 为 true 时生效）
+//  手机端触摸手势（仅viewerActive=true生效）
 // ===================================================================
 function setupTouchGestures() {
     function getTouchDistance(touches) {
@@ -209,6 +223,7 @@ function setupTouchGestures() {
             touches[0].clientY - touches[1].clientY
         );
     }
+
     /* touchstart */
     viewer.addEventListener('touchstart', function (e) {
         if (!viewerActive) return;
@@ -231,6 +246,7 @@ function setupTouchGestures() {
             lastTouchDistance = getTouchDistance(e.touches);
         }
     }, { passive: false });
+
     /* touchmove */
     viewer.addEventListener('touchmove', function (e) {
         if (!viewerActive) return;
@@ -246,6 +262,7 @@ function setupTouchGestures() {
             lastTouchDistance = dist;
         }
     }, { passive: false });
+
     /* touchend */
     viewer.addEventListener('touchend', function (e) {
         if (!viewerActive) return;
@@ -268,7 +285,8 @@ function setupTouchGestures() {
             }
         }
     }, { passive: true });
-    /* 双击 */
+
+    /* 双击放大图片 */
     img.addEventListener('touchend', function (e) {
         if (!viewerActive) return;
         const now = Date.now();
@@ -292,13 +310,14 @@ function setupTouchGestures() {
         }
     }, { passive: false });
 }
+
 // ===== 粒子背景 =====
 const canvas = document.getElementById('particles');
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-// 粒子画布禁止双指手势
 canvas.style.touchAction = 'manipulation';
+// 修复：仅弹窗关闭时拦截画布双指
 canvas.addEventListener('touchstart', e => {
     if (!viewerActive) e.preventDefault();
 }, { passive: false });
