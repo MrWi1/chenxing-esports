@@ -4,7 +4,7 @@
     box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     -webkit-tap-highlight-color: transparent;
-    /* 全局页面仅允许单指上下左右滑动，禁用双指缩放 */
+    /* 页面仅允许单指滑动，不拦截多点事件接收 */
     touch-action: pan-x pan-y;
 }
 body {
@@ -15,7 +15,6 @@ body {
     padding-top: env(safe-area-inset-top, 0px);
     padding-bottom: env(safe-area-inset-bottom, 0px);
     touch-action: manipulation;
-    /* 禁止微信下拉回弹 */
     overscroll-behavior: none;
 }
 /* 粒子背景 */
@@ -26,8 +25,8 @@ body {
     width: 100%;
     height: 100%;
     z-index: -1;
-    /* 画布禁止双指手势 */
     touch-action: manipulation;
+    pointer-events: auto;
 }
 /* 顶部标题 */
 .header {
@@ -193,7 +192,7 @@ body {
     opacity: 1;
     visibility: visible;
 }
-/* 仅弹窗内图片允许全部触摸手势，覆盖全局限制 */
+/* 仅弹窗图片允许完整手势 */
 .image-viewer .viewer-img {
     max-width: 90%;
     max-height: 80vh;
@@ -203,9 +202,14 @@ body {
     user-select: none !important;
     -webkit-user-drag: none;
     will-change: transform;
+    pointer-events: auto;
 }
 .viewer-img:active {
     cursor: grabbing;
+}
+/* 控制按钮允许点击，但不拦截底层图片触摸 */
+.viewer-controls, .close-btn {
+    pointer-events: auto;
 }
 /* 底部控制栏 */
 .viewer-controls {
