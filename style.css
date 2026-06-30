@@ -3,6 +3,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -10,6 +11,8 @@ body {
     color: #fff;
     overflow-x: hidden;
     position: relative;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* 粒子背景 */
@@ -45,6 +48,7 @@ body {
     padding: 15px;
     background: rgba(10, 10, 30, 0.8);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     position: sticky;
     top: 0;
     z-index: 100;
@@ -60,6 +64,7 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 0.9rem;
+    white-space: nowrap;
 }
 
 .navbar button:hover,
@@ -87,6 +92,7 @@ body {
     font-size: 1rem;
     outline: none;
     transition: all 0.3s ease;
+    -webkit-appearance: none;
 }
 
 .search-bar input:focus {
@@ -104,7 +110,7 @@ body {
     margin: 0 auto;
 }
 
-/* 卡片样式（你的设计） */
+/* 卡片样式 */
 .card {
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
     border: 1px solid rgba(0, 255, 255, 0.2);
@@ -113,6 +119,12 @@ body {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     position: relative;
     cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.card:active {
+    transform: scale(0.97);
 }
 
 .card:hover {
@@ -131,6 +143,7 @@ body {
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
+    pointer-events: none;
 }
 
 .card:hover .card-image img {
@@ -172,14 +185,16 @@ body {
     line-height: 1.4;
 }
 
-/* 图片查看器 */
+/* ============================================
+   图片查看器（PC + 手机通用）
+   ============================================ */
 .image-viewer {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.95);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -187,7 +202,7 @@ body {
     z-index: 1000;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s ease;
+    transition: opacity 0.3s ease;
 }
 
 .image-viewer.active {
@@ -195,56 +210,32 @@ body {
     visibility: visible;
 }
 
-.viewer-header {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    right: 20px;
-    background: rgba(0, 0, 0, 0.7);
-    padding: 15px;
-    border-radius: 8px;
-    color: white;
-    z-index: 10;
-    max-width: 80%;
-}
-
-.viewer-title {
-    font-size: 24px;
-    font-weight: bold;
-    margin: 0 0 8px 0;
-    color: #00ffff;
-}
-
-.viewer-desc {
-    font-size: 14px;
-    opacity: 0.9;
-    margin: 0 0 8px 0;
-}
-
-.viewer-tags {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-}
-
+/* 图片本体 —— 手机端核心 */
 .viewer-img {
     max-width: 90%;
     max-height: 80vh;
     object-fit: contain;
-    transition: transform 0.1s ease;
-    cursor: grab;
+    touch-action: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+    -webkit-user-drag: none;
+    will-change: transform;
+    /* 手机端用 JS 直接设 transform，不需要 CSS transition */
 }
 
 .viewer-img:active {
     cursor: grabbing;
 }
 
+/* 底部控制栏 */
 .viewer-controls {
     position: absolute;
     bottom: 20px;
     display: flex;
     gap: 10px;
     z-index: 10;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .viewer-btn {
@@ -255,6 +246,8 @@ body {
     color: #00ffff;
     cursor: pointer;
     transition: all 0.3s ease;
+    font-size: 0.9rem;
+    white-space: nowrap;
 }
 
 .viewer-btn:hover {
@@ -268,33 +261,189 @@ body {
     right: 20px;
 }
 
-/* 响应式 */
+/* ============================================
+   手机端适配 (≤768px)
+   ============================================ */
 @media (max-width: 768px) {
-    .menu-section {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+
+    /* Header */
+    .header {
+        font-size: 1.6rem;
+        padding: 14px 0;
     }
 
-    .header h1 {
-        font-size: 1.8rem;
-    }
-
-    .viewer-title {
-        font-size: 18px;
-    }
-}
-
-@media (max-width: 480px) {
-    .menu-section {
-        grid-template-columns: 1fr;
-    }
-
+    /* 导航栏 → 横向滚动胶囊 */
     .navbar {
-        flex-direction: column;
-        align-items: stretch;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding: 10px 12px;
+        gap: 8px;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .navbar::-webkit-scrollbar {
+        display: none;
     }
 
     .navbar button {
-        width: 100%;
-        margin: 5px 0;
+        flex: 0 0 auto;
+        padding: 6px 14px;
+        font-size: 0.85rem;
+        border-radius: 999px;
+    }
+
+    /* 搜索栏吸顶 */
+    .search-bar {
+        padding: 10px 14px;
+        position: sticky;
+        top: 45px;
+        z-index: 99;
+    }
+
+    .search-bar input {
+        padding: 10px 16px;
+        font-size: 0.95rem;
+    }
+
+    /* 卡片单列 */
+    .menu-section {
+        grid-template-columns: 1fr;
+        padding: 12px;
+        gap: 14px;
+    }
+
+    .card {
+        border-radius: 10px;
+    }
+
+    .card-image {
+        height: 160px;
+    }
+
+    .card-content h3 {
+        font-size: 1rem;
+    }
+
+    .card-content p {
+        font-size: 0.85rem;
+    }
+
+    /* 图片查看器 → 全屏沉浸式 */
+    .image-viewer {
+        background: rgba(0, 0, 0, 0.97);
+    }
+
+    .viewer-img {
+        max-width: 100%;
+        max-height: 100vh;
+    }
+
+    /* 底部控制栏：手机端更大更靠下 */
+    .viewer-controls {
+        bottom: max(20px, env(safe-area-inset-bottom, 10px));
+        gap: 8px;
+        padding: 0 10px;
+    }
+
+    .viewer-btn {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+        min-width: 60px;
+    }
+
+    .close-btn {
+        top: max(12px, env(safe-area-inset-top, 10px));
+        right: 12px;
+        padding: 8px 14px;
+        font-size: 1.4rem;
+        z-index: 1010;
+    }
+}
+
+/* ============================================
+   超小屏 (≤480px)
+   ============================================ */
+@media (max-width: 480px) {
+    .header {
+        font-size: 1.3rem;
+        padding: 10px 0;
+    }
+
+    .navbar button {
+        padding: 5px 12px;
+        font-size: 0.8rem;
+    }
+
+    .search-bar {
+        padding: 8px 10px;
+        top: 38px;
+    }
+
+    .menu-section {
+        padding: 10px;
+        gap: 12px;
+    }
+
+    .card-image {
+        height: 140px;
+    }
+
+    .card-content h3 {
+        font-size: 0.95rem;
+    }
+
+    .card-content p {
+        font-size: 0.8rem;
+    }
+
+    .viewer-controls {
+        bottom: max(14px, env(safe-area-inset-bottom, 8px));
+        gap: 5px;
+    }
+
+    .viewer-btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+}
+
+/* ============================================
+   横屏手机
+   ============================================ */
+@media (max-width: 768px) and (orientation: landscape) {
+    .header {
+        font-size: 1.2rem;
+        padding: 8px 0;
+    }
+
+    .navbar {
+        padding: 6px 10px;
+    }
+
+    .search-bar {
+        padding: 6px 10px;
+        top: 32px;
+    }
+
+    .menu-section {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .card-image {
+        height: 120px;
+    }
+
+    .viewer-controls {
+        bottom: 10px;
+        flex-direction: row;
+    }
+
+    .viewer-img {
+        max-height: 90vh;
     }
 }
